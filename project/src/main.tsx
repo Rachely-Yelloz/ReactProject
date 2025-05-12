@@ -7,8 +7,10 @@ import Home from './home.tsx'
 import Login from './login.tsx'
 import Recipes from './recipes.tsx'
 import SignUp from './sign-up.tsx'
-import Addrecipes from './addRecipe.tsx'
+// import Addrecipes from './addRecipe.tsx'
 import { UserProvider } from './UserContext.tsx'
+import RecipeForm from './RecipeForm.tsx'
+import AddRecipe from './addRecipe.tsx'
 const Routes = createBrowserRouter([
   {
     path: "/",
@@ -30,6 +32,7 @@ const Routes = createBrowserRouter([
       },
 
       { path: "recipes", element: <Recipes /> },
+
     ],
   },
   {
@@ -37,9 +40,16 @@ const Routes = createBrowserRouter([
     element: <Login />,
   },
   { path: "signin", element: <SignUp /> },
-  { path: "addrecipe", element: <Addrecipes /> },
-  { path: "recipes", element: <Recipes /> },
+  // { path: "addrecipe", element: <Addrecipes /> },
+  {
+    path: "recipes", element: <Recipes />,
+    // children: [
 
+    // ]
+
+  },
+  { path: "edit/:id", element: <RecipeForm /> },
+  { path: "Addrecipe", element: <AddRecipe /> },
 ]);
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

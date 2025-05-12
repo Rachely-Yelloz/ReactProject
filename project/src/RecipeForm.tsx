@@ -4,14 +4,15 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { RecipeFormData } from './models';
 import axios from 'axios';
-import { useUser } from './UserContext';
 
-export default function AddRecipe() {
+export default function RecipeForm() {
+    const location = useLocation();
     const navigate = useNavigate();
-  const { user } = useUser();
+    const { id } = useParams();
 
-    // let recipe: RecipeFormData | null = null; // Initialize with null
-    const { register, handleSubmit, control, reset } = useForm<any>({
+    const recipe = location.state?.recipe as RecipeFormData;
+
+    const { register, handleSubmit, control, reset } = useForm<RecipeFormData>({
         defaultValues: {
             Id: 0,
             Name: '',
@@ -19,16 +20,16 @@ export default function AddRecipe() {
             Difficulty: 1,
             Duration: 0,
             Description: '',
-            UserId: 2,
-            Categoryid: 1,
+            UserId: 0,
+            Categoryid: null,
             Img: '',
-            Ingridents: [],
+            Ingredients: [],
         },
     });
 
     const { fields: ingredientFields, append: appendIngredient, remove: removeIngredient } = useFieldArray({
         control,
-        name: 'Ingridents',
+        name: 'Ingredients',
     });
 
     const { fields: instructionFields, append: appendInstruction, remove: removeInstruction } = useFieldArray({
@@ -36,41 +37,40 @@ export default function AddRecipe() {
         name: 'Instructions',
     });
 
-    // useEffect(() => {
-    //     if (recipe === null) { // Check for null explicitly
-    //         alert('אין מתכון להוספה');
-    //         navigate('/recipes');
-    //         return;
-    //     }
-
-    //     reset(recipe);
-    // }, [recipe]);
-
-
-    const onSubmit = async (data: RecipeFormData) => {
-        try {
-            //   הסרה של שדות שאסור לשנות (Id ו-UserId יישארו כמו שהם)
-            const updatedData = {
-                ...data,
-                Id:undefined,
-                // אם ממש רוצים לוודא – אפשר גם למחוק שדות כאן, לדוגמה:
-                 UserId: user.id, // אם השרת מתעלם ממנו
-            };
-
-            const response = await axios.post('http://localhost:8080/api/recipe', updatedData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            console.log('המתכון נוסף בהצלחה:', response.data);
-            alert('המתכון נשמר בהצלחה!');
+    useEffect(() => {
+        if (!recipe) {
+            alert('אין מתכון לעריכה');
             navigate('/recipes');
-        } catch (error) {
-            console.error('שגיאה בשמירת המתכון:', error);
-            alert('אירעה שגיאה בעת שמירת המתכון');
+            return;
         }
-    };
+
+        reset(recipe);
+    }, [recipe]);
+
+  
+const onSubmit = async (data: RecipeFormData) => {
+    try {
+   //   הסרה של שדות שאסור לשנות (Id ו-UserId יישארו כמו שהם)
+      const updatedData = {
+        ...data,
+        // אם ממש רוצים לוודא – אפשר גם למחוק שדות כאן, לדוגמה:
+        // UserId: undefined, // אם השרת מתעלם ממנו
+      };
+  
+      const response = await axios.post('http://localhost:8080/api/recipe/edit', updatedData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      console.log('המתכון עודכן בהצלחה:', response.data);
+      alert('המתכון נשמר בהצלחה!');
+      navigate('/recipes');
+    } catch (error) {
+      console.error('שגיאה בשמירת המתכון:', error);
+      alert('אירעה שגיאה בעת שמירת המתכון');
+    }
+  };
 
     return (
         <form

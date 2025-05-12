@@ -15,6 +15,8 @@ import { useNavigate } from 'react-router-dom';
 export default function SignUp() {
     const { register, handleSubmit, formState: { errors } } = useForm();
     const navigate = useNavigate();
+    const { setUser } = useUser();
+
     const onSubmit = async (data: any) => {
         const url = 'http://localhost:8080/api/user/sighin'; // שנה לכתובת ה-API שלך
         const requestData = {
@@ -29,16 +31,15 @@ export default function SignUp() {
         try {
             const response = await axios.post(url, requestData);
             console.log('User signed up successfully:', response.data);
-            const { setUser } = useUser();
             setUser({
                 name: data.Name,
                 id: response.data.id, // הנח שיש לך id מהשרת
                 isLoggedIn: true,
             });
-            
+
             navigate('/home');
             // כאן תוכל להוסיף קוד נוסף לאחר ההצלחה, כמו ריענון הטופס או מעבר לדף אחר
-        } catch (error:any) {
+        } catch (error: any) {
             if (error.response) {
                 // הבקשה בוצעה אך השרת החזיר תשובה עם סטטוס שגיאה
                 console.error('Error:', error.response.data);
@@ -80,13 +81,13 @@ export default function SignUp() {
                             placeholder="Enter your username"
                             error={!!errors.Username}
                         />
-{errors.Username && <Alert  component="div">Username is required.</Alert>}
-</FormControl>
+                        {errors.Username && <Alert component="div">Username is required.</Alert>}
+                    </FormControl>
 
                     <FormControl>
                         <FormLabel>Password</FormLabel>
                         <Input
-                            {...register("Password", { minLength: 5 })}
+                            {...register("Password", { required: true, minLength: 5 })}
                             type="password"
                             placeholder="Enter your password"
                             error={!!errors.Password}
