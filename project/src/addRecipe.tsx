@@ -86,7 +86,7 @@ export default function AddRecipe() {
                 color: '#4b2e2e',
             }}
         >
-            <h2 style={{ textAlign: 'center', color: '#5c3d2e' }}>עריכת מתכון</h2>
+            <h2 style={{ textAlign: 'center', color: '#5c3d2e' }}>הוספת מתכון</h2>
 
             <label>שם מתכון:</label>
             <input {...register('Name', { required: true })} style={inputStyle} />

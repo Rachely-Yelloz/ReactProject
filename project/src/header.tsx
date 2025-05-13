@@ -39,7 +39,7 @@ function HeaderCom() {
           <Box sx={{ display: 'flex', justifyContent: 'center', flexGrow: 1 }}>
             {user.isLoggedIn ? (
               <>
-                <Button className="header-button" component={Link} to="/home" onClick={logout}>home</Button>
+                <Button className="header-button" component={Link} to="/home" onClick={logout}>log out</Button>
                 <Button className="header-button" component={Link} to="/recipes">to our recipes</Button>
                 <Button className="header-button" component={Link} to="/addrecipe">add recipe</Button>
               </>

@@ -20,33 +20,40 @@ export default function Login() {
   const handleLogin = async () => {
 
     const url = ' http://localhost:8080/api/user/login'; // שנה לכתובת ה-API שלך
-        const requestData = {
-            UserName: email,
-            Password: password,
-          
-        };
+    const requestData = {
+      UserName: email,
+      Password: password,
 
-        try {
-            const response = await axios.post(url, requestData);
-            console.log('User signed up successfully:', response.data);
-         //  debugger;
-            setUser({
-                name: response.data.Name,
-                id: response.data.Id, // הנח שיש לך id מהשרת
-                isLoggedIn: true,
-            });
-            
-            navigate('/home');
-            // כאן תוכל להוסיף קוד נוסף לאחר ההצלחה, כמו ריענון הטופס או מעבר לדף אחר
-        } catch (error:any) {
-            if (error.response) {
-                // הבקשה בוצעה אך השרת החזיר תשובה עם סטטוס שגיאה
-                console.error('Error:', error.response.data);
-            } else {
-                // שגיאה אחרת (למשל בעיה ברשת)
-                console.error('Error:', error.message);
-            }
-        }
+    };
+
+    try {
+      const response = await axios.post(url, requestData);
+      console.log('User signed up successfully:', response.data);
+      //  debugger;
+      const user = {
+        name: response.data.Name,
+        id: response.data.Id, // הנח שיש לך id מהשרת
+        isLoggedIn: true,
+      }
+      // setUser({
+      //   name: response.data.Name,
+      //   id: response.data.Id, // הנח שיש לך id מהשרת
+      //   isLoggedIn: true,
+      // });
+      sessionStorage.setItem('user', JSON.stringify(user));
+      setUser(user); // ← זה מה שחסר
+
+      navigate('/home');
+      // כאן תוכל להוסיף קוד נוסף לאחר ההצלחה, כמו ריענון הטופס או מעבר לדף אחר
+    } catch (error: any) {
+      if (error.response) {
+        // הבקשה בוצעה אך השרת החזיר תשובה עם סטטוס שגיאה
+        console.error('Error:', error.response.data);
+      } else {
+        // שגיאה אחרת (למשל בעיה ברשת)
+        console.error('Error:', error.message);
+      }
+    }
 
   };
 

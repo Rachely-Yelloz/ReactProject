@@ -31,12 +31,19 @@ export default function SignUp() {
         try {
             const response = await axios.post(url, requestData);
             console.log('User signed up successfully:', response.data);
-            setUser({
-                name: data.Name,
-                id: response.data.id, // הנח שיש לך id מהשרת
+            // setUser({
+            //     name: data.Name,
+            //     id: response.data.id, // הנח שיש לך id מהשרת
+            //     isLoggedIn: true,
+            // });
+            const user = {
+                name: response.data.Name,
+                id: response.data.Id, // הנח שיש לך id מהשרת
                 isLoggedIn: true,
-            });
+            }
 
+            sessionStorage.setItem('user', JSON.stringify(user));
+            setUser(user); // ← זה מה שחסר
             navigate('/home');
             // כאן תוכל להוסיף קוד נוסף לאחר ההצלחה, כמו ריענון הטופס או מעבר לדף אחר
         } catch (error: any) {
